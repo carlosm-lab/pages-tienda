@@ -26,8 +26,7 @@ const MAX_MESSAGE_LENGTH = 1800;
  * Aplica truncamiento inteligente si el mensaje excede el límite.
  *
  * @param {string} phone - El número de WhatsApp del vendedor
- * @param {string} rawMessage - Mensaje pre-generado por el servidor
- * @returns {Object} Objeto conteniendo la { url, usedFallback }
+ * @returns {Object} Objeto conteniendo la { url, usedFallback, isMobile }
  */
 export function buildWhatsAppUrl(phone, rawMessage) {
   const formattedPhone = phone ? phone.toString().replace(/\D/g, '') : WHATSAPP_NUMBER.replace(/\D/g, '');
@@ -43,8 +42,20 @@ export function buildWhatsAppUrl(phone, rawMessage) {
     messageToSend = messageToSend.substring(0, MAX_MESSAGE_LENGTH) + "\n\n... [El pedido es más extenso, el resto se omitió para poder enviarlo. Por favor revisa mi cuenta/carrito en la app].";
   }
 
+  const encodedMessage = encodeURIComponent(messageToSend);
+  
+  let isMobile = false;
+  if (typeof navigator !== 'undefined') {
+    isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  }
+
+  const url = isMobile 
+    ? `whatsapp://send?phone=${formattedPhone}&text=${encodedMessage}`
+    : `https://web.whatsapp.com/send?phone=${formattedPhone}&text=${encodedMessage}`;
+
   return {
-    url: `https://wa.me/${formattedPhone}?text=${encodeURIComponent(messageToSend)}`,
-    usedFallback
+    url,
+    usedFallback,
+    isMobile
   };
 }

@@ -49,8 +49,14 @@ export default function CartDrawer() {
   const [isGeneratingMessage, setIsGeneratingMessage] = useState(false);
 
   const handleWhatsAppOrder = async () => {
-    // Abrir ventana temporal synchronously para evitar el popup blocker del navegador
-    const whatsappWindow = window.open('about:blank', '_blank');
+    const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    // Solo en desktop abrimos la ventana auxiliar sincrónicamente para evitar popup blockers de nuevas pestañas.
+    // En móviles, asignaremos el 'whatsapp://' a window.location.href nativamente.
+    let whatsappWindow = null;
+    if (!isMobileDevice) {
+      whatsappWindow = window.open('about:blank', '_blank');
+    }
     
     setIsGeneratingMessage(true);
     let rawMessage = '';
@@ -107,11 +113,15 @@ export default function CartDrawer() {
     }
     
     try {
-      if (whatsappWindow) {
-        whatsappWindow.location.href = url;
+      if (isMobileDevice) {
+        window.location.href = url;
       } else {
-        // Fallback: window.open with noopener,noreferrer per security protocol
-        window.open(url, '_blank', 'noopener,noreferrer');
+        if (whatsappWindow) {
+          whatsappWindow.location.href = url;
+        } else {
+          // Fallback: window.open with noopener,noreferrer per security protocol
+          window.open(url, '_blank', 'noopener,noreferrer');
+        }
       }
     } catch (e) {
       logger.error('Error al redirigir a WhatsApp:', e);
