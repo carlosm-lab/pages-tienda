@@ -87,35 +87,43 @@ function CarlosEasterEgg() {
   const bufferRef = useRef('');
   const timerRef = useRef(null);
 
-  const handleKeyDown = useCallback((e) => {
-    // Ignorar teclas de control/modificadores
-    if (e.ctrlKey || e.altKey || e.metaKey || e.key.length > 1) return;
-
-    // Reset timer on each keystroke
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => { bufferRef.current = ''; }, 2000);
-
-    bufferRef.current += e.key.toLowerCase();
-
-    // Match "carlitos" first (longer match), then "carlos"
-    if (bufferRef.current.includes('carlitos') || bufferRef.current.includes('carlos')) {
-      bufferRef.current = '';
-      setShow(true);
-    }
-
-    // Keep buffer manageable
-    if (bufferRef.current.length > 30) {
-      bufferRef.current = bufferRef.current.slice(-15);
-    }
-  }, []);
-
   useEffect(() => {
+    const handleGlobalInput = (e) => {
+      if (e.target && e.target.value) {
+        const val = e.target.value.toLowerCase();
+        if (/(c|k)arl(os|itos)/.test(val)) {
+          setShow(true);
+        }
+      }
+    };
+    
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey || e.altKey || e.metaKey || !e.key || e.key.length > 1) return;
+
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => { bufferRef.current = ''; }, 2000);
+
+      bufferRef.current += e.key.toLowerCase();
+
+      if (/(c|k)arl(os|itos)/.test(bufferRef.current)) {
+        bufferRef.current = '';
+        setShow(true);
+      }
+
+      if (bufferRef.current.length > 30) {
+        bufferRef.current = bufferRef.current.slice(-15);
+      }
+    };
+
+    window.addEventListener('input', handleGlobalInput);
     window.addEventListener('keydown', handleKeyDown);
+    
     return () => {
+      window.removeEventListener('input', handleGlobalInput);
       window.removeEventListener('keydown', handleKeyDown);
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [handleKeyDown]);
+  }, []);
 
   if (!show) return null;
 

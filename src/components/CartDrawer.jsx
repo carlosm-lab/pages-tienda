@@ -111,26 +111,29 @@ export default function CartDrawer() {
       if (whatsappWindow) whatsappWindow.close();
       return;
     }
-    
-    try {
-      if (isMobileDevice) {
-        window.location.href = url;
-      } else {
-        if (whatsappWindow) {
-          whatsappWindow.location.href = url;
-        } else {
-          // Fallback: window.open with noopener,noreferrer per security protocol
-          window.open(url, '_blank', 'noopener,noreferrer');
-        }
-      }
-    } catch (e) {
-      logger.error('Error al redirigir a WhatsApp:', e);
-      toast('Abre WhatsApp manualmente al ' + rawPhoneNumber, { icon: '📱' });
-    }
-    
-    // Cambiar estado a orderSent, pero NO limpiar el carrito aún
+    // Update UI perfectly BEFORE launching the intent to guarantee it renders
     setOrderSent(true);
     setShowConfirm(false);
+    
+    // Usamos setTimeout para permitir que React renderice la pantalla "¡Pedido generado!"
+    // ANTES de que el navegador suspenda la página por el salto a WhatsApp.
+    setTimeout(() => {
+      try {
+        if (isMobileDevice) {
+           window.location.href = url;
+        } else {
+          if (whatsappWindow) {
+            whatsappWindow.location.href = url;
+          } else {
+            // Fallback: window.open with noopener,noreferrer per security protocol
+            window.open(url, '_blank', 'noopener,noreferrer');
+          }
+        }
+      } catch (e) {
+        logger.error('Error al redirigir a WhatsApp:', e);
+        toast('Abre WhatsApp manualmente al ' + rawPhoneNumber, { icon: '📱' });
+      }
+    }, 100);
   };
 
   const handleFinishAndClear = () => {
