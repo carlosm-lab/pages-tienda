@@ -1127,7 +1127,7 @@ Y ACUERDO DE CESIÓN PARCIAL DE DERECHOS DE USO
 DOCUMENTO         | DETALLE
 ------------------|----------------------------------------------------------
 Versión           | 1.0 — Definitiva
-Fecha             | San Miguel, San Miguel, República de El Salvador, 2025
+Fecha             | San Miguel, San Miguel, República de El Salvador, 1 de abril de 2026
 Donante           | Carlos José Molina Villacorta
 Donataria         | Ennis Damaris Navarrete de Ortez
 Sistema           | PaGe's Detalles & Más — React 19.0.0, Vite 6.2.0,
