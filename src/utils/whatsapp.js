@@ -16,9 +16,6 @@
 // riesgo real de precio incorrecto.
 // ──────────────────────────────────────────────────────────────
 import { WHATSAPP_NUMBER } from '@/config/constants';
-import { formatPrice } from '@/utils/formatPrice';
-import { sanitizeInput } from '@/utils/sanitize';
-
 // Límite práctico del mensaje incluido en la URL.
 // WhatsApp oficialmente no documenta un límite exacto,
 // pero URLs > 2000 chars fallan en algunos dispositivos/browsers.
@@ -30,11 +27,9 @@ const MAX_MESSAGE_LENGTH = 1800;
  *
  * @param {string} phone - El número de WhatsApp del vendedor
  * @param {string} rawMessage - Mensaje pre-generado por el servidor
- * @param {Array} items - Productos del carrito (para fallback) 
- * @param {Function} calculateTotal - Función para calcular total (para fallback)
  * @returns {Object} Objeto conteniendo la { url, usedFallback }
  */
-export function buildWhatsAppUrl(phone, rawMessage, items = [], calculateTotal = null) {
+export function buildWhatsAppUrl(phone, rawMessage) {
   const formattedPhone = phone ? phone.toString().replace(/\D/g, '') : WHATSAPP_NUMBER.replace(/\D/g, '');
   
   const fallbackMessage = "¡Hola! He realizado un pedido extenso en la tienda, me gustaría revisarlo contigo. Mi carrito está guardado en el sistema.";
