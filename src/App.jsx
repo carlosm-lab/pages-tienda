@@ -97,7 +97,7 @@ function EasterEggs() {
       return { emoji: '🏳️‍🌈', title: 'No vendemos Jotos', text: '', showLink: false };
     }
     if (/beatriz/.test(text)) {
-      return { emoji: '🤢', title: 'Wakala, ese producto ya esta vencido', text: '', showLink: false };
+      return { emoji: '😏', title: 'Wakala, ese producto ya esta vencido', text: '', showLink: false };
     }
     return null;
   };
@@ -144,7 +144,7 @@ function EasterEggs() {
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[9999] flex items-start sm:items-center justify-center p-4 pt-20 sm:pt-4"
       style={{ backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)' }}
       onClick={() => setActiveEgg(null)}
     >
