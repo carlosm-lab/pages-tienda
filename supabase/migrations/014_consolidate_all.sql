@@ -255,7 +255,9 @@ USING (bucket_id = 'product-images' AND public.is_admin());
 -- ---------------------------------------------------------------------------
 -- 10. FUNCTION: change_user_role — CRIT-004: Add admin limit to prevent lateral escalation
 -- ---------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION public.change_user_role(target_id uuid, new_role user_role)
+DROP FUNCTION IF EXISTS public.change_user_role(uuid, user_role);
+
+CREATE OR REPLACE FUNCTION public.change_user_role(target_id uuid, new_role text)
 RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -279,6 +281,11 @@ BEGIN
     RAISE EXCEPTION 'No se puede cambiar el rol del administrador principal';
   END IF;
 
+  -- Validation
+  IF new_role NOT IN ('admin', 'user') THEN
+    RAISE EXCEPTION 'Rol inválido';
+  END IF;
+
   -- CRIT-004: Prevent unlimited admin creation
   IF new_role = 'admin' THEN
     SELECT COUNT(*) INTO current_admin_count FROM public.profiles WHERE role = 'admin';
@@ -287,7 +294,7 @@ BEGIN
     END IF;
   END IF;
 
-  UPDATE public.profiles SET role = new_role WHERE id = target_id;
+  UPDATE public.profiles SET role = new_role::user_role WHERE id = target_id;
 
   -- Audit log
   INSERT INTO public.audit_log (action_type, target_user_id, performed_by, details)

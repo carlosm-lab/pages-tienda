@@ -25,44 +25,31 @@ import { sanitizeInput } from '@/utils/sanitize';
 const MAX_MESSAGE_LENGTH = 1800;
 
 /**
- * Construye la URL wa.me con el mensaje del pedido.
+ * Construye la URL wa.me con el mensaje del pedido utilizando el mensaje ya generado por el servidor.
  * Aplica truncamiento inteligente si el mensaje excede el límite.
  *
- * @param {Array} items - Productos del carrito con { name, price, quantity }
- * @param {number} total - Total calculado
- * @param {string} [userName] - Nombre del usuario (opcional, para personalizar)
- * @returns {string} URL completa de WhatsApp
+ * @param {string} phone - El número de WhatsApp del vendedor
+ * @param {string} rawMessage - Mensaje pre-generado por el servidor
+ * @param {Array} items - Productos del carrito (para fallback) 
+ * @param {Function} calculateTotal - Función para calcular total (para fallback)
+ * @returns {Object} Objeto conteniendo la { url, usedFallback }
  */
-export function buildWhatsAppUrl(items, total, userName = '') {
-  const phone = WHATSAPP_NUMBER.replace(/\D/g, '');
-  const greeting = userName
-    ? `¡Hola! Soy ${sanitizeInput(userName)}. Me gustaría realizar el siguiente pedido:`
-    : '¡Hola! Me gustaría realizar el siguiente pedido:';
+export function buildWhatsAppUrl(phone, rawMessage, items = [], calculateTotal = null) {
+  const formattedPhone = phone ? phone.toString().replace(/\D/g, '') : WHATSAPP_NUMBER.replace(/\D/g, '');
+  
+  const fallbackMessage = "¡Hola! He realizado un pedido extenso en la tienda, me gustaría revisarlo contigo. Mi carrito está guardado en el sistema.";
 
-  // Construir líneas de producto
-  const productLines = items.map(item =>
-    `• ${sanitizeInput(item.name)} x${item.quantity} — ${formatPrice(item.price * item.quantity)}`
-  );
+  let messageToSend = rawMessage || fallbackMessage;
+  let usedFallback = !rawMessage;
 
-  const totalLine = `\n💰 *Total: ${formatPrice(total)}*`;
-  const footer = '\n\n¿Podrían confirmarme disponibilidad y forma de pago? ¡Gracias!';
-
-  let message = `${greeting}\n\n${productLines.join('\n')}${totalLine}${footer}`;
-
-  // ── Truncamiento inteligente ──────────────────────────
-  // Si excedemos el límite, quitamos productos del final
-  // (que son los menos prioritarios) hasta que quepa.
-  // Esto es mejor que cortar el mensaje a la mitad.
-  if (message.length > MAX_MESSAGE_LENGTH) {
-    let truncatedLines = [...productLines];
-    const omittedNote = '\n... y más productos (ver carrito completo en la tienda)';
-
-    while (truncatedLines.length > 1) {
-      truncatedLines.pop();
-      message = `${greeting}\n\n${truncatedLines.join('\n')}${omittedNote}${totalLine}${footer}`;
-      if (message.length <= MAX_MESSAGE_LENGTH) break;
-    }
+  // ── Truncamiento de seguridad ──────────────────────────
+  if (messageToSend.length > MAX_MESSAGE_LENGTH) {
+    usedFallback = true;
+    messageToSend = messageToSend.substring(0, MAX_MESSAGE_LENGTH) + "\n\n... [El pedido es más extenso, el resto se omitió para poder enviarlo. Por favor revisa mi cuenta/carrito en la app].";
   }
 
-  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  return {
+    url: `https://wa.me/${formattedPhone}?text=${encodeURIComponent(messageToSend)}`,
+    usedFallback
+  };
 }
