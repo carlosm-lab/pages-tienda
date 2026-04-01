@@ -4,7 +4,7 @@ export default defineConfig({
   e2e: {
     baseUrl: "http://127.0.0.1:5173",
     supportFile: false,
-    setupNodeEvents(on, config) {
+    setupNodeEvents() {
       // implement node event listeners here
     },
   },
