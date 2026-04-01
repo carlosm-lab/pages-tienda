@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /product/
+Allow: /catalog
+Allow: /contact
+
+Sitemap: https://licdamarismuebles.com/sitemap.xml

@@ -1,0 +1,75 @@
+import { Link } from 'react-router-dom';
+import { formatPrice } from '@/utils/formatPrice';
+
+export default function RecentProducts({ products, loading }) {
+  if (loading) {
+    return (
+      <div className="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-360 border border-slate-100 dark:border-white/5 h-full">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Productos Recientes</h3>
+        <div className="space-y-4">
+          {[1, 2, 3, 4, 5].map(i => (
+            <div key={i} className="flex gap-4 items-center animate-pulse">
+              <div className="w-12 h-12 bg-slate-200 dark:bg-white/10 rounded-lg shrink-0"></div>
+              <div className="flex-1 space-y-2">
+                <div className="h-4 bg-slate-200 dark:bg-white/10 rounded w-3/4"></div>
+                <div className="h-3 bg-slate-200 dark:bg-white/10 rounded w-1/2"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-360 border border-slate-100 dark:border-white/5 h-full flex flex-col">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Productos Recientes</h3>
+        <Link to="/admin/products" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+          Ver todos
+        </Link>
+      </div>
+
+      {products.length === 0 ? (
+        <p className="text-slate-500 dark:text-slate-400 text-sm py-4 text-center">No hay productos recientes.</p>
+      ) : (
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <ul className="divide-y divide-slate-100 dark:divide-white/5">
+            {products.map(product => (
+              <li key={product.id} className="py-3 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-white/10 overflow-hidden shrink-0">
+                    {product.image_path ? (
+                      <img 
+                        src={product.image_path} 
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-400">
+                        <span className="material-symbols-outlined text-[20px]">image</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                      {product.name}
+                    </p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                      {product.category || 'Sin categoría'}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">
+                    {formatPrice(product.price)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}

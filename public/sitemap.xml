@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://pages-tienda.vercel.app/</loc>
+    <lastmod>2026-04-01T08:07:50.396Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://pages-tienda.vercel.app/catalog</loc>
+    <lastmod>2026-04-01T08:07:50.398Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pages-tienda.vercel.app/contact</loc>
+    <lastmod>2026-04-01T08:07:50.398Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pages-tienda.vercel.app/terms</loc>
+    <lastmod>2026-04-01T08:07:50.398Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pages-tienda.vercel.app/privacy</loc>
+    <lastmod>2026-04-01T08:07:50.398Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

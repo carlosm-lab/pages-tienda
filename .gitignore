@@ -1,0 +1,56 @@
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Supabase and Env
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# OS Files
+Thumbs.db
+
+# Testing
+coverage/
+cypress/videos/
+cypress/screenshots/
+__tests__/
+.nyc_output/
+test-results/
+playwright-report/
+
+# Debug/lint output — TAREA-9: prevent recurrence of residual debug files
+eslint*.json
+eslint*.txt
+lint-results.*
+*_output.*
+*_out.*
+fresh_eslint.*
+vitest-out.*
+e2e.json
+skills-lock.json
+
+# Tool-specific metadata and documentation
+.agents/
+.claude/
+.kiro/
+docs/
