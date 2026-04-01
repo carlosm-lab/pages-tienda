@@ -246,7 +246,7 @@ export default function ProductModal({ isOpen, onClose, product, onSave, categor
       
       <div 
         ref={modalRef}
-        className="relative w-full max-w-2xl max-h-[90vh] bg-white dark:bg-white/5 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-2xl max-h-[85vh] mb-16 sm:mb-0 bg-white dark:bg-white/5 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
       >
         
         {/* Header */}
